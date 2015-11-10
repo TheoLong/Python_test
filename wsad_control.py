@@ -1,37 +1,4 @@
-class _Getch:
-    """Gets a single character from standard input.  Does not echo to the
-screen."""
-    def __init__(self):
-        try:
-            self.impl = _GetchWindows()
-        except ImportError:
-            self.impl = _GetchUnix()
 
-    def __call__(self): return self.impl()
-
-
-class _GetchUnix:
-    def __init__(self):
-        import tty, sys
-
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-
-class _GetchWindows:
-    def __init__(self):
-        import msvcrt
-
-    def __call__(self):
-        import msvcrt
-        return msvcrt.getch()
 import Adafruit_BBIO.PWM as PWM
 #PWM.start(channel, duty, freq=2000, polarity=0)
 #duty values are valid 0 (off) to 100 (on)
@@ -54,10 +21,8 @@ PWM.set_duty_cycle("P9_14", 0)
 PWM.set_duty_cycle("P9_16", 0)
 
 #for i in range(0,100):
-drt =_Getch()
+drt=raw_input("direction: ")
 while drt != "q" or "Q":
-
-	#drt =_Getch()
 	drt=raw_input("direction: ")
 	print(drt)
 	if drt == "w":
